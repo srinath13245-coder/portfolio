@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Srinath A | Dynamic Portfolio</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    background:#0b1120;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* Mouse trail canvas */
+#trailCanvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:0;
+}
+
+header{
+    text-align:center;
+    padding:60px 20px;
+    background:linear-gradient(135deg,#1e293b,#020617);
+    position:relative;
+    z-index:1;
+}
+
+header h1{
+    font-size:3rem;
+    letter-spacing:2px;
+}
+
+header p{
+    margin-top:10px;
+    opacity:0.9;
+}
+
+section{
+    max-width:1000px;
+    margin:40px auto;
+    padding:20px;
+    position:relative;
+    z-index:1;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:rgba(30,41,59,0.7);
+    backdrop-filter:blur(10px);
+    padding:25px;
+    border-radius:18px;
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+    transform-style:preserve-3d;
+    perspective:1000px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.card:hover{
+    box-shadow:0 20px 40px rgba(0,0,0,0.5);
+}
+
+.card h2{
+    margin-bottom:10px;
+    color:#38bdf8;
+}
+
+a{color:#38bdf8;text-decoration:none;}
+
+ul{padding-left:20px;}
+</style>
+</head>
+
+<body>
+
+<canvas id="trailCanvas"></canvas>
+
+<header>
+    <h1>Srinath A</h1>
+    <p>B.Tech AI & Data Science Student</p>
+    <p>
+        📞 9087932566 |
+        ✉️ srinath30112006@gmail.com |
+        <a href="https://www.linkedin.com/in/srinath-srinath-a-93a271382" target="_blank">LinkedIn</a>
+    </p>
+</header>
+
+<section>
+    <div class="grid">
+
+        <div class="card tilt">
+            <h2>About Me</h2>
+            <p>
+                I am an Artificial Intelligence and Data Science student passionate about Python,
+                Web Development, and AI Chatbot creation. I love building real-world solutions using technology.
+            </p>
+        </div>
+
+        <div class="card tilt">
+            <h2>Technical Skills</h2>
+            <ul>
+                <li>Python Programming</li>
+                <li>Web Development (HTML, CSS, JavaScript)</li>
+                <li>Artificial Intelligence</li>
+                <li>Chatbot Development</li>
+                <li>VS Code, Jupyter, Google Colab</li>
+            </ul>
+        </div>
+
+        <div class="card tilt">
+            <h2>Education</h2>
+            <p>B.Tech AI & DS – Priyadharshini Engineering College – CGPA 7.9</p>
+            <p>12th – 66% | 10th – 65%</p>
+        </div>
+
+        <div class="card tilt">
+            <h2>Certifications</h2>
+            <p>Inter BA Hindi</p>
+        </div>
+
+        <div class="card tilt">
+            <h2>Contact</h2>
+            <p>Address: 25, Jubble Road, Kundhanimedu, Vaniyambadi – 635754</p>
+            <p>Languages: Tamil, English, Hindi</p>
+        </div>
+
+    </div>
+</section>
+
+<script>
+/* 3D tilt effect */
+document.querySelectorAll('.tilt').forEach(card => {
+    card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = -(y - centerY) / 10;
+        const rotateY = (x - centerX) / 10;
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'rotateX(0) rotateY(0) scale(1)';
+    });
+});
+
+/* Mouse trail particles */
+const canvas = document.getElementById('trailCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+window.addEventListener('mousemove', e => {
+    for(let i=0;i<3;i++){
+        particles.push({
+            x:e.clientX,
+            y:e.clientY,
+            radius:Math.random()*3+1,
+            alpha:1
+        });
+    }
+});
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach((p,i)=>{
+        p.alpha -= 0.02;
+        p.radius += 0.2;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+        ctx.fillStyle = `rgba(56,189,248,${p.alpha})`;
+        ctx.fill();
+        if(p.alpha<=0) particles.splice(i,1);
+    });
+
+    requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
